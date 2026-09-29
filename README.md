@@ -13,6 +13,7 @@ This repository contains:
 - a reference implementation written in TypeScript (zero runtime dependencies)
 - a reader/writer library with validation and corruption detection
 - a small CLI for inspection and extraction
+- [Python examples](examples/python/) implementing the format from the spec (stdlib only)
 - canonical fixtures, corruption fixtures, and a full test suite
 - [documentation](docs/) and [examples](examples/)
 
