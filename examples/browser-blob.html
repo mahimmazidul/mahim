@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MAHIM browser example</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.4rem 0.6rem; text-align: left; font-size: 0.9rem; }
+    th { background: #f4f4f4; }
+    code { background: #f0f0f0; padding: 0.1rem 0.3rem; }
+  </style>
+</head>
+<body>
+  <h1>MAHIM browser inspector</h1>
+  <p>
+    Select a <code>.mahim</code> file. The header and directory are parsed
+    from a <code>File</code> (Blob) input; sections are read on demand with
+    Blob slicing — the whole file is never loaded into memory.
+  </p>
+  <input type="file" id="file" />
+  <div id="summary"></div>
+  <table id="sections" hidden>
+    <thead>
+      <tr><th>#</th><th>Name</th><th>Type</th><th>Stored</th><th>Size</th><th>Flags</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script type="module">
+    import { openMahim, parseMahimHeader } from "../dist/index.js"
+
+    const input = document.getElementById("file")
+    const summary = document.getElementById("summary")
+    const table = document.getElementById("sections")
+    const tbody = table.querySelector("tbody")
+
+    input.addEventListener("change", async () => {
+      const file = input.files[0]
+      if (!file) return
+      summary.textContent = "Parsing..."
+      tbody.innerHTML = ""
+      table.hidden = true
+      try {
+        const header = await parseMahimHeader(file)
+        const reader = await openMahim(file, { rejectUnknownCritical: false })
+        summary.innerHTML = `
+          <p><strong>Format:</strong> MAHIM ${header.formatVersion.major}.${header.formatVersion.minor}<br/>
+          <strong>Application:</strong> ${header.applicationIdentifier} (payload v${header.applicationPayloadVersion})<br/>
+          <strong>Sections:</strong> ${header.sectionCount}<br/>
+          <strong>File size:</strong> ${header.fileLength} bytes</p>`
+        for (const section of reader.listSections()) {
+          const row = document.createElement("tr")
+          row.innerHTML = `<td>${section.index}</td><td>${section.name || "-"}</td>
+            <td>${section.type}</td><td>${section.storedLength}</td>
+            <td>${section.uncompressedLength}</td>
+            <td>${section.critical ? "critical" : "optional"}</td>`
+          tbody.appendChild(row)
+        }
+        table.hidden = false
+      } catch (error) {
+        summary.textContent = `error: ${error.name}: ${error.message}`
+      }
+    })
+  </script>
+</body>
+</html>

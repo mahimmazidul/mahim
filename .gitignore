@@ -6,3 +6,4 @@ build/
 coverage/
 bench-results/
 .tmp/
+examples/*.mahim
