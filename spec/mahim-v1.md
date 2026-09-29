@@ -850,22 +850,24 @@ The metadata map `{"app": "demo", "count": 3}` encodes as:
 
 ```
 A2                  # map(2)
-   63 61 70 70      # "app"
+   63 61 70 70      # "app"   (encoded key 63 61 70 70)
    64 64 65 6D 6F   # "demo"
-   65 63 6F 75 6E 74 # "count"
+   65 63 6F 75 6E 74 # "count" (encoded key 65 63 6F 75 6E 74)
    03               # 3
 ```
 
-(`count` < `app` in encoded-key order because `65 ...` < `63 ...`? No: `app`
-encodes as `63 61 70 70` and `count` as `65 63 6F 75 6E 74`; `0x63 < 0x65`, so
-`app` is written first.)
+Keys are sorted by their *encoded* key bytes: `app` encodes to
+`63 61 70 70` and `count` to `65 63 6F 75 6E 74`; `0x63 < 0x65`, so `app` is
+written first even though `count` sorts earlier in plain code-point order.
 
 ---
 
 ## Appendix B — Complete binary layout example
 
-A file with one unnamed application payload section, no compression, no file
-digest:
+A file with application `svelp`, application payload version 3, one
+application-payload section named `payload` (11 content bytes
+`hello mahim`, no compression, no file digest). This is exactly the committed
+canonical fixture `fixtures/single-section.mahim`:
 
 | Offset | Bytes | Field | Value |
 |---:|---|---|---|
@@ -873,21 +875,24 @@ digest:
 | 5 | `01` | format_major | 1 |
 | 6 | `00` | format_minor | 0 |
 | 7 | `00` | header_flags | none |
-| 8 | `41 00 00 00` | header_length | 65 |
+| 8 | `3D 00 00 00` | header_length | 61 |
 | 12 | `05 00` | application_identifier_length | 5 |
-| 14 | `01 00 00 00` | application_payload_version | 1 |
+| 14 | `03 00 00 00` | application_payload_version | 3 |
 | 18 | `01 00 00 00` | section_count | 1 |
-| 22 | `41 00 00 00 00 00 00 00` | section_directory_offset | 65 |
-| 30 | `30 00 00 00 00 00 00 00` | section_directory_length | 48 |
-| 38 | `71 00 00 00 00 00 00 00` | file_length | 113 |
-| 46 | *(crc32c)* | header_checksum | CRC32C |
+| 22 | `3D 00 00 00 00 00 00 00` | section_directory_offset | 61 |
+| 30 | `37 00 00 00 00 00 00 00` | section_directory_length | 55 |
+| 38 | `7F 00 00 00 00 00 00 00` | file_length | 127 |
+| 46 | *(crc32c)* | header_checksum | CRC32C over the header with bytes 46–49 zeroed |
 | 50 | `00 00 00 00 00 00` | reserved | 0 |
 | 56 | `73 76 65 6C 70` | application_identifier | "svelp" |
-| 65 | descriptor | section 0 | type=application_payload, … |
-| 113 | — | end | file_length = 113 |
+| 61 | descriptor (48 B) | section 0 | type=2, version=3, payload_offset=116, stored_length=11, uncompressed_length=11, checksum=CRC32C, encoding=0, compression=0, flags=0x0001, application_defined_id=1, name_length=7 |
+| 109 | `70 61 79 6C 6F 61 64` | name table | "payload" |
+| 116 | `68 65 6C 6C 6F ...` | section payload | `hello mahim` |
+| 127 | — | end | file_length = 127 |
 
-With one 0-byte payload: directory occupies `[65, 113)`, payload occupies
-`[113, 113)`, `file_length = 113`.
+Layout arithmetic: `header_length = 56 + 5 = 61`;
+`section_directory_length = 48 * 1 + 7 = 55`; payload starts at
+`61 + 55 = 116`; `file_length = 116 + 11 = 127`.
 
 Canonical fixture files in `fixtures/` were generated from these rules and are
 verified byte-for-byte by the test suite.
