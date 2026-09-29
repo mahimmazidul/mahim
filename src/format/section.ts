@@ -1,11 +1,13 @@
 import {
   InvalidSectionDirectoryError,
+  ResourceLimitError,
   UnsupportedEncodingError,
   UnsupportedCompressionError,
   UnsupportedFeatureError,
 } from "../errors/index.js"
 import {
   CompressionMethod,
+  MAX_SECTION_NAME_LENGTH,
   PayloadEncoding,
   SECTION_FLAG_CRITICAL,
   SECTION_FLAG_OPTIONAL,
@@ -92,9 +94,14 @@ export function decodeSectionDescriptor(
   if (type === SectionType.Invalid) {
     throw new InvalidSectionDirectoryError(`section ${index} has invalid type 0`)
   }
-  if (nameLength > limits.maxSectionNameLength) {
+  if (nameLength > MAX_SECTION_NAME_LENGTH) {
     throw new InvalidSectionDirectoryError(
-      `section ${index} name length ${nameLength} exceeds limit`,
+      `section ${index} name length ${nameLength} exceeds the format maximum`,
+    )
+  }
+  if (nameLength > limits.maxSectionNameLength) {
+    throw new ResourceLimitError(
+      `section ${index} name length ${nameLength} exceeds limit ${limits.maxSectionNameLength}`,
     )
   }
   if ((flags & SECTION_FLAG_RESERVED_MASK) !== 0) {
@@ -119,13 +126,13 @@ export function decodeSectionDescriptor(
     )
   }
   if (storedLength > limits.maxSectionStoredLength) {
-    throw new InvalidSectionDirectoryError(
-      `section ${index} stored length ${storedLength} exceeds limit`,
+    throw new ResourceLimitError(
+      `section ${index} stored length ${storedLength} exceeds limit ${limits.maxSectionStoredLength}`,
     )
   }
   if (uncompressedLength > limits.maxSectionUncompressedLength) {
-    throw new InvalidSectionDirectoryError(
-      `section ${index} uncompressed length ${uncompressedLength} exceeds limit`,
+    throw new ResourceLimitError(
+      `section ${index} uncompressed length ${uncompressedLength} exceeds limit ${limits.maxSectionUncompressedLength}`,
     )
   }
   return {
