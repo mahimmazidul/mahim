@@ -58,6 +58,12 @@ export type {
   SectionDescriptorInput,
 } from "./format/section.js"
 export { encodeSectionDescriptor, decodeSectionDescriptor } from "./format/section.js"
+export type { SectionDirectory } from "./format/directory.js"
+export {
+  encodeSectionDirectory,
+  decodeSectionDirectory,
+  directoryLengthFor,
+} from "./format/directory.js"
 export type { CborValue, DecodeCborOptions } from "./encoding/cbor.js"
 export { encodeCbor, decodeCbor } from "./encoding/cbor.js"
 export { crc32c } from "./checksum/crc32c.js"
