@@ -1,0 +1,61 @@
+{
+  "name": "mahim",
+  "version": "0.1.0",
+  "description": "MAHIM — a lightweight, deterministic, extensible binary container format with a TypeScript reference implementation",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "mahim",
+    "binary",
+    "container",
+    "format",
+    "serialization",
+    "sections",
+    "cbor"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mahimmazidul/mahim.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node/index.d.ts",
+      "import": "./dist/node/index.js"
+    }
+  },
+  "bin": {
+    "mahim": "./bin/mahim.mjs"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "spec",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "build:tests": "tsc -p tsconfig.test.json",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "lint": "node scripts/check-no-comments.mjs",
+    "test": "npm run build:tests && node --test build/tests/",
+    "fixtures": "npm run build && node scripts/generate-fixtures.mjs",
+    "bench": "npm run build && node scripts/bench.mjs",
+    "size": "npm run build && node scripts/bundle-size.mjs",
+    "validate": "npm run typecheck && npm run lint && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.5.0"
+  }
+}
