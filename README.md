@@ -1,14 +1,16 @@
 # MAHIM
 
-**MAHIM** is a lightweight, deterministic, extensible binary container format
-for typed sections of binary and structured data. It is self-describing, fast
-and safe to parse, streaming-friendly, and designed to be implemented in any
-language without reverse-engineering ambiguity.
+<img src="assets/brand/mahim-symbol.svg" alt="MAHIM symbol" width="72">
+
+**MAHIM** is a versioned binary container format for portable application
+data. It is section-oriented, extensible, integrity-aware, and
+application-independent — self-describing, fast and safe to parse, and
+unambiguous to reimplement in any language.
 
 This repository contains:
 
 - the [MAHIM v1 specification](spec/mahim-v1.md) — the authoritative format definition
-- a TypeScript reference implementation (zero runtime dependencies)
+- a reference implementation written in TypeScript (zero runtime dependencies)
 - a reader/writer library with validation and corruption detection
 - a small CLI for inspection and extraction
 - canonical fixtures, corruption fixtures, and a full test suite
@@ -180,7 +182,20 @@ CLI is a Node-only tool. See [docs/compatibility.md](docs/compatibility.md).
 | [docs/application-identifiers.md](docs/application-identifiers.md) | Application identifier rules and registry |
 | [docs/compatibility.md](docs/compatibility.md) | Versioning and compatibility rules |
 | [docs/benchmarks.md](docs/benchmarks.md) | Measured performance |
+| [docs/branding.md](docs/branding.md) | Symbol, wordmark, lockups, file icon |
+| [docs/file-associations.md](docs/file-associations.md) | Platform registration and icon guidance |
 | [docs/adr/](docs/adr/) | Architecture decision records |
+
+## Brand and file icon
+
+The official symbol, wordmark, lockups, and `.mahim` file icon live in
+[assets/](assets/) as canonical SVG sources with generated PNG and ICO
+derivatives. The identity is a container with internal sections — see
+[docs/branding.md](docs/branding.md) for usage rules and
+[docs/file-associations.md](docs/file-associations.md) for platform
+registration. The `.mahim` file icon appears in file managers only after a
+MAHIM-aware application registers the extension or MIME type
+(`application/x-mahim`, provisional; not IANA-registered).
 
 ## Package size
 
