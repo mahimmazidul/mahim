@@ -2,8 +2,8 @@ import {
   ChecksumMismatchError,
   InvalidMagicError,
   MalformedSectionError,
-  ResourceLimitError,
   SectionNotFoundError,
+  UnsupportedFeatureError,
 } from "../errors/index.js"
 import { crc32c } from "../checksum/crc32c.js"
 import { bytesEqual, writeUint32LE, readUint32LE } from "../format/primitives.js"
@@ -13,6 +13,8 @@ import {
   DEFAULT_LIMITS,
   HEADER_FIXED_LENGTH,
   FILE_DIGEST_LENGTH,
+  SECTION_TYPE_APPLICATION_MIN,
+  SectionType,
   type ApplicationIdentifier,
   type FormatVersion,
   type ParserLimits,
@@ -59,6 +61,9 @@ export interface VerifyOptions {
 
 export interface OpenOptions {
   readonly limits?: Partial<ParserLimits>
+  readonly understoodSectionTypes?: readonly number[]
+  readonly understoodExtensions?: readonly string[]
+  readonly rejectUnknownCritical?: boolean
 }
 
 export interface MahimReader {
@@ -229,7 +234,29 @@ export async function openMahim(
     fileLength: header.fileLength,
     digestSize: header.fileDigestSha256 ? FILE_DIGEST_LENGTH : 0,
   })
+  if (options?.rejectUnknownCritical ?? true) {
+    for (const descriptor of descriptors) {
+      if (descriptor.critical && !isSectionUnderstood(descriptor, options)) {
+        throw new UnsupportedFeatureError(
+          `critical section ${descriptor.index} (${descriptor.name === "" ? "unnamed" : descriptor.name}) is not understood (type ${descriptor.type})`,
+        )
+      }
+    }
+  }
   return new MahimReaderImpl(source, header, descriptors, limits)
+}
+
+function isSectionUnderstood(descriptor: SectionDescriptor, options?: OpenOptions): boolean {
+  if (descriptor.type >= SectionType.Metadata && descriptor.type <= SectionType.Index) {
+    return true
+  }
+  if (descriptor.type === SectionType.Extension) {
+    return options?.understoodExtensions?.includes(descriptor.name) ?? false
+  }
+  if (descriptor.type >= SECTION_TYPE_APPLICATION_MIN) {
+    return options?.understoodSectionTypes?.includes(descriptor.type) ?? false
+  }
+  return false
 }
 
 async function readHeader(source: ByteSource, limits: ParserLimits): Promise<MahimHeader> {

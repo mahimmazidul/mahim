@@ -16,6 +16,7 @@ import {
   SectionNotFoundError,
   UnsupportedCompressionError,
   UnsupportedEncodingError,
+  UnsupportedFeatureError,
 } from "../src/errors/index.js"
 
 function text(value: string): Uint8Array {
@@ -207,7 +208,8 @@ test("application namespace type range is honored", async () => {
     .setApplication({ identifier: "acme", payloadVersion: 1 })
     .addSection({ type: appType, name: "custom", data: text("custom section"), critical: true })
     .finalize()
-  const reader = await openMahim(bytes)
+  await assert.rejects(openMahim(bytes), UnsupportedFeatureError)
+  const reader = await openMahim(bytes, { understoodSectionTypes: [appType] })
   const descriptor = reader.findSection("custom")!
   assert.equal(descriptor.type, appType)
   assert.equal(descriptor.critical, true)
