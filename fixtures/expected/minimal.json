@@ -1,0 +1,13 @@
+{
+  "header": {
+    "magic": "MAHIM",
+    "formatMajor": 1,
+    "formatMinor": 0,
+    "applicationIdentifier": "mahim",
+    "applicationPayloadVersion": 0,
+    "sectionCount": 0,
+    "fileDigestSha256": false,
+    "fileLength": 61
+  },
+  "sections": []
+}

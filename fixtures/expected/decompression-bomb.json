@@ -1,0 +1,25 @@
+{
+  "header": {
+    "magic": "MAHIM",
+    "formatMajor": 1,
+    "formatMinor": 0,
+    "applicationIdentifier": "mahim",
+    "applicationPayloadVersion": 1,
+    "sectionCount": 1,
+    "fileDigestSha256": false,
+    "fileLength": 4193
+  },
+  "sections": [
+    {
+      "name": "bomb",
+      "type": 3,
+      "version": 0,
+      "encoding": 0,
+      "compression": 1,
+      "optional": true,
+      "critical": false,
+      "applicationDefinedId": 0,
+      "uncompressedLength": 4194304
+    }
+  ]
+}

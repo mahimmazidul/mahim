@@ -1,0 +1,69 @@
+{
+  "header": {
+    "magic": "MAHIM",
+    "formatMajor": 1,
+    "formatMinor": 0,
+    "applicationIdentifier": "mahim",
+    "applicationPayloadVersion": 1,
+    "sectionCount": 5,
+    "fileDigestSha256": false,
+    "fileLength": 400
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "type": 1,
+      "version": 0,
+      "encoding": 1,
+      "compression": 0,
+      "optional": true,
+      "critical": false,
+      "applicationDefinedId": 0,
+      "uncompressedLength": 20
+    },
+    {
+      "name": "payload",
+      "type": 2,
+      "version": 0,
+      "encoding": 0,
+      "compression": 0,
+      "optional": true,
+      "critical": false,
+      "applicationDefinedId": 0,
+      "uncompressedLength": 10
+    },
+    {
+      "name": "asset",
+      "type": 3,
+      "version": 0,
+      "encoding": 0,
+      "compression": 0,
+      "optional": true,
+      "critical": false,
+      "applicationDefinedId": 0,
+      "uncompressedLength": 5
+    },
+    {
+      "name": "index",
+      "type": 4,
+      "version": 0,
+      "encoding": 1,
+      "compression": 0,
+      "optional": true,
+      "critical": false,
+      "applicationDefinedId": 0,
+      "uncompressedLength": 13
+    },
+    {
+      "name": "demo-extension",
+      "type": 5,
+      "version": 0,
+      "encoding": 0,
+      "compression": 0,
+      "optional": true,
+      "critical": false,
+      "applicationDefinedId": 0,
+      "uncompressedLength": 16
+    }
+  ]
+}

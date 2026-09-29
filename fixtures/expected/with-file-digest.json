@@ -1,0 +1,36 @@
+{
+  "header": {
+    "magic": "MAHIM",
+    "formatMajor": 1,
+    "formatMinor": 0,
+    "applicationIdentifier": "mahim",
+    "applicationPayloadVersion": 1,
+    "sectionCount": 2,
+    "fileDigestSha256": true,
+    "fileLength": 223
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "type": 1,
+      "version": 0,
+      "encoding": 1,
+      "compression": 0,
+      "optional": true,
+      "critical": false,
+      "applicationDefinedId": 0,
+      "uncompressedLength": 9
+    },
+    {
+      "name": "asset",
+      "type": 3,
+      "version": 0,
+      "encoding": 0,
+      "compression": 0,
+      "optional": true,
+      "critical": false,
+      "applicationDefinedId": 0,
+      "uncompressedLength": 16
+    }
+  ]
+}

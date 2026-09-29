@@ -1,0 +1,25 @@
+{
+  "header": {
+    "magic": "MAHIM",
+    "formatMajor": 1,
+    "formatMinor": 0,
+    "applicationIdentifier": "svelp",
+    "applicationPayloadVersion": 3,
+    "sectionCount": 1,
+    "fileDigestSha256": false,
+    "fileLength": 127
+  },
+  "sections": [
+    {
+      "name": "payload",
+      "type": 2,
+      "version": 3,
+      "encoding": 0,
+      "compression": 0,
+      "optional": true,
+      "critical": false,
+      "applicationDefinedId": 1,
+      "uncompressedLength": 11
+    }
+  ]
+}
